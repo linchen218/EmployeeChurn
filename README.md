@@ -12,8 +12,8 @@ the model as well as any next steps.
 * Data Cleaning
 * EDA
 * Predictive Modeling
-  * -Logistic Regression
-  * -Linear Regression
-  * -kNN
+  * Logistic Regression
+  * Linear Regression
+  * kNN
 * Evaluation
 
