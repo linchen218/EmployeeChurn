@@ -1,6 +1,6 @@
 # EmployeeChurn
 
-## Introducion
+## Introduction
 The main objective of this project is to create a predictive model that will be able to predict employee churn as accurate as possible using various attributes associated with employees. 
 Predicting employee churn offers invaluable advantages to organizations. It enables them to proactively implement retention strategies, addressing issues that may prompt employees to leave. 
 This approach not only retains valuable talent but is also likely more cost-effective than recruiting and training new employees. 
