@@ -9,11 +9,11 @@ and changes will occur throughout to adjust for better performance of the model.
 the model as well as any next steps.
 
 ## Methods
-*Data Cleaning
-*EDA
-*Predictive Modeling
-  *-Logistic Regression
-  *-Linear Regression
-  *-kNN
-*Evaluation
+* Data Cleaning
+* EDA
+* Predictive Modeling
+  * -Logistic Regression
+  * -Linear Regression
+  * -kNN
+* Evaluation
 
