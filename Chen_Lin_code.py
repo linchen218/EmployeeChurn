@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 from scipy.stats import chi2_contingency
 import statsmodels.api as sm
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
+from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
+
 
 
 #Import Data
@@ -130,11 +132,30 @@ log_reg_pred = log_reg_model.predict(X_test)
 tree_pred = tree_model.predict(X_test)
 knn_pred = knn_model.predict(X_test)
 
-# Accuracy
+# Log Regression
 log_reg_accuracy = accuracy_score(y_test, log_reg_pred)
-tree_accuracy = accuracy_score(y_test, tree_pred)
-knn_accuracy = accuracy_score(y_test, knn_pred)
-
 print("Logistic Regression Accuracy:", log_reg_accuracy)
+log_reg_precision = precision_score(y_test, log_reg_pred)
+log_reg_recall = recall_score(y_test, log_reg_pred)
+log_reg_f1 = f1_score(y_test, log_reg_pred)
+log_reg_conf_matrix = confusion_matrix(y_test, log_reg_pred)
+log_reg_false_positives = log_reg_conf_matrix[0, 1]
+log_reg_false_negatives = log_reg_conf_matrix[1, 0]
+
+# Decision Tree
+tree_accuracy = accuracy_score(y_test, tree_pred)
 print("Decision Tree Accuracy:", tree_accuracy)
+tree_precision = precision_score(y_test, tree_pred)
+tree_recall = recall_score(y_test, tree_pred)
+tree_f1 = f1_score(y_test, tree_pred)
+tree_conf_matrix = confusion_matrix(y_test, tree_pred)
+tree_false_positives = tree_conf_matrix[0, 1]
+tree_false_negatives = tree_conf_matrix[1, 0]
+
+# K-nearest neighbors
+knn_accuracy = accuracy_score(y_test, knn_pred)
 print("K-Nearest Neighbors Accuracy:", knn_accuracy)
+knn_precision = precision_score(y_test, knn_pred)
+knn_recall = recall_score(y_test, knn_pred)
+knn_f1 = f1_score(y_test, knn_pred)
+knn_conf_matrix = confusion_matrix(y_test, knn_pred)
