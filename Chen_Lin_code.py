@@ -120,7 +120,7 @@ y = data['Attrition']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 # Models
-log_reg_model = LogisticRegression()
+log_reg_model = LogisticRegression(max_iter=6500)  # Increase max_iter to a higher value
 tree_model = DecisionTreeClassifier()
 knn_model = KNeighborsClassifier()
 
