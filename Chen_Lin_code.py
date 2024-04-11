@@ -10,11 +10,13 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-from scipy.stats import chi2_contingency
-import statsmodels.api as sm
-from statsmodels.stats.multicomp import pairwise_tukeyhsd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
-
+from sklearn.ensemble import RandomForestClassifier
 
 
 #Import Data
@@ -75,6 +77,32 @@ plt.ylabel('Income')
 plt.grid(True)  
 plt.show()
 
+attrition_data = data['Attrition']
+
+plt.figure(figsize=(8, 6))  
+plt.hist(attrition_data, bins=2, color='skyblue', edgecolor='black')
+plt.title('Attrition Distribution')
+plt.xlabel('Attrition')
+plt.ylabel('Frequency')
+plt.show()
+
+dept_attrition = data.groupby(['Department', 'Attrition']).size().unstack(fill_value=0).reset_index()
+fig, ax = plt.subplots()
+bar_width = 0.35
+bar_positions_left = range(len(dept_attrition['Department']))
+bar_positions_stayed = [pos + bar_width for pos in bar_positions_left]
+ax.bar(bar_positions_left, dept_attrition['Yes'], width=bar_width, label='Yes')
+
+# Bar chart for employees who stayed
+ax.bar(bar_positions_stayed, dept_attrition['No'], width=bar_width, label='No')
+
+ax.set_xlabel('Department')
+ax.set_ylabel('Number of Employees')
+ax.set_title('Employees Left vs. Stayed by Department')
+ax.set_xticks([pos + bar_width / 2 for pos in bar_positions_left])
+ax.set_xticklabels(dept_attrition['Department'])
+ax.legend()
+
 average_age = data['Age'].mean()
 print(average_age)
 
@@ -113,14 +141,56 @@ sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
 plt.title("Correlation Matrix")
 plt.show()
 
-# Split data into testing and training set
-X = data.drop('Attrition', axis=1)
+#######
+
+data['Attrition'] = data['Attrition'].map({'Yes': 1, 'No': 0})
+
+X = data.drop(['Attrition', 'EmployeeNumber'], axis=1)
+
 y = data['Attrition']
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X = pd.get_dummies(X)
+
+# Feature Selection
+model = RandomForestClassifier()
+model.fit(X, y)
+
+# Get feature importances
+importances = model.feature_importances_
+
+indices = importances.argsort()[::-1]
+
+plt.figure(figsize=(10, 6))
+plt.title("Feature Importance")
+plt.bar(range(X.shape[1]), importances[indices], align="center")
+plt.xticks(range(X.shape[1]), X.columns[indices], rotation=90)
+plt.tight_layout()
+plt.show()
+
+# Feature importance threhold
+threshold = 0.025
+selected_features = X.columns[importances > threshold]
+selected_importances = importances[importances > threshold]
+
+sorted_indices = selected_importances.argsort()[::-1]
+sorted_features = selected_features[sorted_indices]
+sorted_importances = selected_importances[sorted_indices]
+
+
+plt.figure(figsize=(10, 6))
+plt.title("Feature Importance (Importance Score > 0.03)")
+plt.bar(range(len(sorted_features)), sorted_importances, align="center")
+plt.xticks(range(len(sorted_features)), sorted_features, rotation=90)
+plt.tight_layout()
+plt.show()
+
+# Split data into train and test set
+X_selected = X[selected_features]
+
+X_train, X_test, y_train, y_test = train_test_split(X_selected, y, test_size=0.2, random_state=42)
 
 # Models
-log_reg_model = LogisticRegression(max_iter=6500)  # Increase max_iter to a higher value
+log_reg_model = LogisticRegression(max_iter = 3000)
 tree_model = DecisionTreeClassifier()
 knn_model = KNeighborsClassifier()
 
@@ -136,26 +206,38 @@ knn_pred = knn_model.predict(X_test)
 log_reg_accuracy = accuracy_score(y_test, log_reg_pred)
 print("Logistic Regression Accuracy:", log_reg_accuracy)
 log_reg_precision = precision_score(y_test, log_reg_pred)
+print("Logistic Regression Precision:", log_reg_precision)
 log_reg_recall = recall_score(y_test, log_reg_pred)
+print("Logistic Regression Recall:", log_reg_recall)
 log_reg_f1 = f1_score(y_test, log_reg_pred)
+print("Logistic Regression F1:", log_reg_f1)
 log_reg_conf_matrix = confusion_matrix(y_test, log_reg_pred)
 log_reg_false_positives = log_reg_conf_matrix[0, 1]
 log_reg_false_negatives = log_reg_conf_matrix[1, 0]
+print(log_reg_conf_matrix)
 
 # Decision Tree
 tree_accuracy = accuracy_score(y_test, tree_pred)
 print("Decision Tree Accuracy:", tree_accuracy)
 tree_precision = precision_score(y_test, tree_pred)
+print("Decision Tree Precision:", tree_precision)
 tree_recall = recall_score(y_test, tree_pred)
+print("Decision Tree Recall:", tree_recall)
 tree_f1 = f1_score(y_test, tree_pred)
+print("Decision Tree F1:", tree_f1)
 tree_conf_matrix = confusion_matrix(y_test, tree_pred)
 tree_false_positives = tree_conf_matrix[0, 1]
 tree_false_negatives = tree_conf_matrix[1, 0]
+print(tree_conf_matrix)
 
 # K-nearest neighbors
 knn_accuracy = accuracy_score(y_test, knn_pred)
 print("K-Nearest Neighbors Accuracy:", knn_accuracy)
 knn_precision = precision_score(y_test, knn_pred)
+print("K-Nearest Neighbors Precision:", knn_precision)
 knn_recall = recall_score(y_test, knn_pred)
+print("DK-Nearest Neighbors Recall:", knn_recall)
 knn_f1 = f1_score(y_test, knn_pred)
+print("K-Nearest Neighbors F1:", knn_f1)
 knn_conf_matrix = confusion_matrix(y_test, knn_pred)
+print(knn_conf_matrix)
