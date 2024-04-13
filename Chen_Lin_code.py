@@ -17,6 +17,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.utils import resample
+from sklearn.model_selection import cross_val_score
 
 
 #Import Data
@@ -191,7 +192,7 @@ plt.tight_layout()
 plt.show()
 
 # Feature importance threhold
-threshold = 0.025
+threshold = 0.020
 selected_features = X.columns[importances > threshold]
 selected_importances = importances[importances > threshold]
 
@@ -201,7 +202,7 @@ sorted_importances = selected_importances[sorted_indices]
 
 
 plt.figure(figsize=(10, 6))
-plt.title("Feature Importance (Importance Score > 0.03)")
+plt.title("Feature Importance (Importance Score > 0.020)")
 plt.bar(range(len(sorted_features)), sorted_importances, align="center")
 plt.xticks(range(len(sorted_features)), sorted_features, rotation=90)
 plt.tight_layout()
@@ -264,3 +265,45 @@ knn_f1 = f1_score(y_test, knn_pred)
 print("K-Nearest Neighbors F1:", knn_f1)
 knn_conf_matrix = confusion_matrix(y_test, knn_pred)
 print(knn_conf_matrix)
+
+
+# 10 fold cross validation
+log_reg_model = LogisticRegression(max_iter=3000)
+tree_model = DecisionTreeClassifier()
+knn_model = KNeighborsClassifier()
+
+# Logistic Regression
+log_reg_scores = cross_val_score(log_reg_model, X_selected, y, cv=10, scoring='accuracy')
+log_reg_mean_accuracy = log_reg_scores.mean()
+log_reg_mean_precision = cross_val_score(log_reg_model, X_selected, y, cv=10, scoring='precision').mean()
+log_reg_mean_recall = cross_val_score(log_reg_model, X_selected, y, cv=10, scoring='recall').mean()
+log_reg_mean_f1 = cross_val_score(log_reg_model, X_selected, y, cv=10, scoring='f1').mean()
+
+# Decision Tree
+tree_scores = cross_val_score(tree_model, X_selected, y, cv=10, scoring='accuracy')
+tree_mean_accuracy = tree_scores.mean()
+tree_mean_precision = cross_val_score(tree_model, X_selected, y, cv=10, scoring='precision').mean()
+tree_mean_recall = cross_val_score(tree_model, X_selected, y, cv=10, scoring='recall').mean()
+tree_mean_f1 = cross_val_score(tree_model, X_selected, y, cv=10, scoring='f1').mean()
+
+# K-nearest neighbors
+knn_scores = cross_val_score(knn_model, X_selected, y, cv=10, scoring='accuracy')
+knn_mean_accuracy = knn_scores.mean()
+knn_mean_precision = cross_val_score(knn_model, X_selected, y, cv=10, scoring='precision').mean()
+knn_mean_recall = cross_val_score(knn_model, X_selected, y, cv=10, scoring='recall').mean()
+knn_mean_f1 = cross_val_score(knn_model, X_selected, y, cv=10, scoring='f1').mean()
+
+print("Logistic Regression Mean Accuracy:", log_reg_mean_accuracy)
+print("Logistic Regression Mean Precision:", log_reg_mean_precision)
+print("Logistic Regression Mean Recall:", log_reg_mean_recall)
+print("Logistic Regression Mean F1:", log_reg_mean_f1)
+
+print("Decision Tree Mean Accuracy:", tree_mean_accuracy)
+print("Decision Tree Mean Precision:", tree_mean_precision)
+print("Decision Tree Mean Recall:", tree_mean_recall)
+print("Decision Tree Mean F1:", tree_mean_f1)
+
+print("K-Nearest Neighbors Mean Accuracy:", knn_mean_accuracy)
+print("K-Nearest Neighbors Mean Precision:", knn_mean_precision)
+print("K-Nearest Neighbors Mean Recall:", knn_mean_recall)
+print("K-Nearest Neighbors Mean F1:", knn_mean_f1)
