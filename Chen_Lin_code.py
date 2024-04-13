@@ -7,7 +7,6 @@ Created on Mon Mar 18 17:41:34 2024
 """
 
 import pandas as pd
-import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
@@ -17,6 +16,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.utils import resample
 
 
 #Import Data
@@ -141,13 +141,36 @@ sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
 plt.title("Correlation Matrix")
 plt.show()
 
+#Upsample minority target class
+df_majority = data[data['Attrition'] == 'No']
+df_minority = data[data['Attrition'] == 'Yes']
+
+df_minority_upsampled = resample(df_minority, 
+                                 replace=True,     
+                                 n_samples=len(df_majority),
+                                 random_state=42)
+
+df_upsampled = pd.concat([df_majority, df_minority_upsampled])
+
+print(df_upsampled['Attrition'].value_counts())
+
+#Distribution after upsampling
+attrition_data = df_upsampled['Attrition']
+
+plt.figure(figsize=(8, 6))  
+plt.hist(attrition_data, bins=2, color='skyblue', edgecolor='black')
+plt.title('Attrition Distribution')
+plt.xlabel('Attrition')
+plt.ylabel('Frequency')
+plt.show()
+
 #######
 
-data['Attrition'] = data['Attrition'].map({'Yes': 1, 'No': 0})
+df_upsampled['Attrition'] = df_upsampled['Attrition'].map({'Yes': 1, 'No': 0})
 
-X = data.drop(['Attrition', 'EmployeeNumber'], axis=1)
+X = df_upsampled.drop(['Attrition', 'EmployeeNumber'], axis=1)
 
-y = data['Attrition']
+y = df_upsampled['Attrition']
 
 X = pd.get_dummies(X)
 
