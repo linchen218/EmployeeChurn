@@ -1,0 +1,63 @@
+import dash
+from dash import dcc, html, Input, Output
+import pandas as pd
+import plotly.express as px
+
+# Load the employee attrition data
+data = pd.read_csv('/Users/linchen/Documents/DSCI 431 STATS/Employee-Attrition.csv')
+
+# Create the Dash app
+app = dash.Dash(__name__)
+
+# Define the layout of the app
+app.layout = html.Div([
+    html.H1("Employee Attrition Analysis"),
+    html.Div([
+        html.Label("Select attribute for x-axis:"),
+        dcc.Dropdown(
+            id='x-axis-scatter-dropdown',
+            options=[{'label': col, 'value': col} for col in data.columns],
+            value='Age'
+        ),
+        html.Label("Select attribute for y-axis:"),
+        dcc.Dropdown(
+            id='y-axis-scatter-dropdown',
+            options=[{'label': col, 'value': col} for col in data.columns],
+            value='MonthlyIncome'
+        ),
+        dcc.Graph(id='scatter-plot')
+    ]),
+    html.Div([
+        html.Label("Select attribute for histogram:"),
+        dcc.Dropdown(
+            id='histogram-dropdown',
+            options=[{'label': col, 'value': col} for col in data.columns],
+            value='Age'
+        ),
+        dcc.Graph(id='histogram')
+    ])
+])
+
+# Define callback to update scatter plot based on selected attributes
+@app.callback(
+    Output('scatter-plot', 'figure'),
+    [Input('x-axis-scatter-dropdown', 'value'),
+     Input('y-axis-scatter-dropdown', 'value')]
+)
+def update_scatter_plot(x_axis_attribute, y_axis_attribute):
+    scatter_fig = px.scatter(data, x=x_axis_attribute, y=y_axis_attribute, color='Attrition',
+                             title=f"Scatter Plot of {x_axis_attribute} vs. {y_axis_attribute}")
+    return scatter_fig
+
+# Define callback to update histogram based on selected attribute
+@app.callback(
+    Output('histogram', 'figure'),
+    [Input('histogram-dropdown', 'value')]
+)
+def update_histogram(selected_attribute):
+    hist_fig = px.histogram(data, x=selected_attribute, title=f"Histogram of {selected_attribute}")
+    return hist_fig
+
+# Run the app
+if __name__ == '__main__':
+    app.run_server(debug=True)
