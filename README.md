@@ -17,6 +17,9 @@ the model as well as any next steps.
   * kNN
 * Evaluation
 
-To start off, the dataset will be cleaned to address any potential NAs before moving into the Exploratory Data Analysis step of the project. This step is crucial as it is important to
-understand what type of data we are looking at and the distribution of the variables and find hidden patterns. During this stage, we will also be preparing the data for modeling. I am sure that I will be going back and forth between modeling and this stage based on results or biases that I see in the results. For the modeling stage, I am currently considering a logistic regression, decision tree, and k-nearest neighbor and evaluating the results of the 3 models against each other. I will then go in depth into the performance metrics of the models and recommend the best model for the organization to utilize to predict or prepare for employee attrition/churn.
+To start off, the dataset will be cleaned to address any potential NAs before moving into the Exploratory Data Analysis step of the project. This step is crucial as it is important to understand what type of data we are looking at and the distribution of the variables and find hidden patterns. During this stage, we will also be preparing the data for modeling. I am sure that I will be going back and forth between modeling and this stage based on results or biases that I see in the results. For the modeling stage, I am currently considering a logistic regression, decision tree, and k-nearest neighbor and evaluating the results of the 3 models against each other. I will then go in depth into the performance metrics of the models and recommend the best model for the organization to utilize to predict or prepare for employee attrition/churn. 
+
+Note: In order to run the code, please make sure to first download the dataset utilized in the code and save that in a location that is easily traceable. Please then change the path to load the data to reflect where it is saved in your computer before running the code.  
+
+
 
