@@ -21,5 +21,15 @@ To start off, the dataset will be cleaned to address any potential NAs before mo
 
 Note: In order to run the code, please make sure to first download the dataset utilized in the code and save that in a location that is easily traceable. Please then change the path to load the data to reflect where it is saved in your computer before running the code.  
 
+## Demo Application
+This demo application is intended for an HR personnel at a company without any data science experience. The goal is to allow for individuals to easily manipulate the data they have in different ways that can help tell a story or identify any problems. This would also be useful to have for the exploratory data analysis portion before modeling occurs. It can help give the organization insight into any next steps that would be needed.
 
+### How to use:
+1. Download the demo code and replace the file path (notated in the code) with the path where the dataset is actually saved to ensure it runs
+2. Run the code
+3. Open up the terminal on your device and type in "cd" and your filepath where the code is saved
+4. Open up a browser and copy in the url "http://127.0.0.1:8050"
+
+### Next Steps:
+Based on data analysis, it can provide helpful insight as to what actions the organization should do next. As for the demo app itself, a good second implementation would be for an ability for the user to simply type in the relevant attributes for an employee and have the output show what the predicted attrition is. 
 
