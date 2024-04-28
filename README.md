@@ -25,7 +25,7 @@ Note: In order to run the code, please make sure to first download the dataset u
 This demo application is intended for an HR personnel at a company without any data science experience. The goal is to allow for individuals to easily manipulate the data they have in different ways that can help tell a story or identify any problems. This would also be useful to have for the exploratory data analysis portion before modeling occurs. It can help give the organization insight into any next steps that would be needed.
 
 ### How to use:
-1. Download the demo code and replace the file path (notated in the code) with the path where the dataset is actually saved to ensure it runs
+1. Download the demo code (https://github.com/linchen218/EmployeeChurn/blob/main/Chen_Lin_democode) and replace the file path (notated in the code) with the path where the dataset is actually saved to ensure it runs
 2. Run the code
 3. Open up the terminal on your device and type in "cd" and your filepath where the code is saved
 4. Open up a browser and copy in the url "http://127.0.0.1:8050"
