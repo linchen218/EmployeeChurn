@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.express as px
 
 # Load the employee attrition data
-data = pd.read_csv('/Users/linchen/Documents/DSCI 431 STATS/Employee-Attrition.csv')
+data = pd.read_csv('/Users/linchen/Documents/DSCI 431 STATS/Employee-Attrition.csv') #Update to your filepath
 
 # Create the Dash app
 app = dash.Dash(__name__)
@@ -28,6 +28,11 @@ app.layout = html.Div([
         dcc.Graph(id='scatter-plot')
     ]),
     html.Div([
+    html.Label("Select attribute for histogram (from scatter plot):"),
+    dcc.Graph(id='histogram-scatter')
+    
+    ]),
+    html.Div([
         html.Label("Select attribute for histogram:"),
         dcc.Dropdown(
             id='histogram-dropdown',
@@ -35,7 +40,8 @@ app.layout = html.Div([
             value='Age'
         ),
         dcc.Graph(id='histogram')
-    ])
+
+])
 ])
 
 # Define callback to update scatter plot based on selected attributes
@@ -49,6 +55,17 @@ def update_scatter_plot(x_axis_attribute, y_axis_attribute):
                              title=f"Scatter Plot of {x_axis_attribute} vs. {y_axis_attribute}")
     return scatter_fig
 
+# Define callback to update histogram based on selected attributes for scatter plot
+@app.callback(
+    Output('histogram-scatter', 'figure'),
+    [Input('x-axis-scatter-dropdown', 'value'),
+     Input('y-axis-scatter-dropdown', 'value')]
+)
+def update_histogram_scatter(x_axis_attribute, y_axis_attribute):
+    hist_fig = px.histogram(data, x=x_axis_attribute, title=f"Histogram of {x_axis_attribute} for Scatter Plot",
+                            color=y_axis_attribute)
+    return hist_fig
+
 # Define callback to update histogram based on selected attribute
 @app.callback(
     Output('histogram', 'figure'),
@@ -57,6 +74,7 @@ def update_scatter_plot(x_axis_attribute, y_axis_attribute):
 def update_histogram(selected_attribute):
     hist_fig = px.histogram(data, x=selected_attribute, title=f"Histogram of {selected_attribute}")
     return hist_fig
+
 
 # Run the app
 if __name__ == '__main__':
