@@ -18,6 +18,9 @@ from sklearn.metrics import precision_score, recall_score, f1_score, confusion_m
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.utils import resample
 from sklearn.model_selection import cross_val_score
+from joblib import dump
+from sklearn.ensemble import BaggingClassifier
+
 
 
 #Import Data
@@ -307,3 +310,53 @@ print("K-Nearest Neighbors Mean Accuracy:", knn_mean_accuracy)
 print("K-Nearest Neighbors Mean Precision:", knn_mean_precision)
 print("K-Nearest Neighbors Mean Recall:", knn_mean_recall)
 print("K-Nearest Neighbors Mean F1:", knn_mean_f1)
+
+# Bagging approach
+bagging_log_reg = BaggingClassifier(base_estimator=log_reg_model, n_estimators=10, random_state=42)
+bagging_tree = BaggingClassifier(base_estimator=tree_model, n_estimators=10, random_state=42)
+bagging_knn = BaggingClassifier(base_estimator=knn_model, n_estimators=10, random_state=42)
+
+bagging_log_reg.fit(X_train, y_train)
+bagging_tree.fit(X_train, y_train)
+bagging_knn.fit(X_train, y_train)
+
+# Predictions
+log_reg_pred = bagging_log_reg.predict(X_test)
+tree_pred = bagging_tree.predict(X_test)
+knn_pred = bagging_knn.predict(X_test)
+
+# Logistic Regression with Bagging
+bagging_log_reg_scores = cross_val_score(bagging_log_reg, X_selected, y, cv=10, scoring='accuracy')
+bagging_log_reg_mean_accuracy = bagging_log_reg_scores.mean()
+bagging_log_reg_mean_precision = cross_val_score(bagging_log_reg, X_selected, y, cv=10, scoring='precision').mean()
+bagging_log_reg_mean_recall = cross_val_score(bagging_log_reg, X_selected, y, cv=10, scoring='recall').mean()
+bagging_log_reg_mean_f1 = cross_val_score(bagging_log_reg, X_selected, y, cv=10, scoring='f1').mean()
+
+print("Bagging Logistic Regression Mean Accuracy:", bagging_log_reg_mean_accuracy)
+print("Bagging Logistic Regression Mean Precision:", bagging_log_reg_mean_precision)
+print("Bagging Logistic Regression Mean Recall:", bagging_log_reg_mean_recall)
+print("Bagging Logistic Regression Mean F1:", bagging_log_reg_mean_f1)
+
+# Decision Tree with Bagging
+bagging_tree_scores = cross_val_score(bagging_tree, X_selected, y, cv=10, scoring='accuracy')
+bagging_tree_mean_accuracy = bagging_tree_scores.mean()
+bagging_tree_mean_precision = cross_val_score(bagging_tree, X_selected, y, cv=10, scoring='precision').mean()
+bagging_tree_mean_recall = cross_val_score(bagging_tree, X_selected, y, cv=10, scoring='recall').mean()
+bagging_tree_mean_f1 = cross_val_score(bagging_tree, X_selected, y, cv=10, scoring='f1').mean()
+
+print("Bagging Decision Tree Mean Accuracy:", bagging_tree_mean_accuracy)
+print("Bagging Decision Tree Mean Precision:", bagging_tree_mean_precision)
+print("Bagging Decision Tree Mean Recall:", bagging_tree_mean_recall)
+print("Bagging Decision Tree Mean F1:", bagging_tree_mean_f1)
+
+# K-nearest neighbors with Bagging
+bagging_knn_scores = cross_val_score(bagging_knn, X_selected, y, cv=10, scoring='accuracy')
+bagging_knn_mean_accuracy = bagging_knn_scores.mean()
+bagging_knn_mean_precision = cross_val_score(bagging_knn, X_selected, y, cv=10, scoring='precision').mean()
+bagging_knn_mean_recall = cross_val_score(bagging_knn, X_selected, y, cv=10, scoring='recall').mean()
+bagging_knn_mean_f1 = cross_val_score(bagging_knn, X_selected, y, cv=10, scoring='f1').mean()
+
+print("Bagging K-Nearest Neighbors Mean Accuracy:", bagging_knn_mean_accuracy)
+print("Bagging K-Nearest Neighbors Mean Precision:", bagging_knn_mean_precision)
+print("Bagging K-Nearest Neighbors Mean Recall:", bagging_knn_mean_recall)
+print("Bagging K-Nearest Neighbors Mean F1:", bagging_knn_mean_f1)
